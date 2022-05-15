@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  web:
+    build:
+      context: ./
+      dockerfile: ./web/Dockerfile
+    environment:
+      TZ: 'Asia/Tokyo'
+    ports:
+      - 8000:8000
+    volumes:
+      - ./web/logs/nginx/:/var/log/nginx/
+      - ./web/uwsgi_params:/etc/nginx/uwsgi_params
+      - ./back/static:/var/www/static/
+    depends_on:
+      - back
+
+  back:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    command: 'sh /server/start.sh'
+    expose:
+      - "8001"
+    volumes:
+      - ./back:/server/
+
+  front:
+    build:
+      context: ./front
+    command: 'sh /app/start.sh'
+    volumes:
+      - ./front:/app/:cached
+      - ./front/node_modules:/app/node_modules
+    ports:
+      - "8080:8080"

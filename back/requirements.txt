@@ -1,0 +1,5 @@
+django>=2.1.10
+uwsgi==2.0.20
+djangorestframework==3.13.1
+django-cors-headers>=3.11.0
+
